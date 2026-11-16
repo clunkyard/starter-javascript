@@ -39,7 +39,7 @@
 //   drive.forces(thrust strafe lift yaw_torque pitch_torque roll_torque brake)
 //   gun.aim(heading pitch) gun.fire(power) scanner.set(heading arc pitch)
 //   scanner.power(on) tracker.configure(smoothing forget_ticks cue_ticks)
-//   status.set(text value) raw.extra(json)
+//   status.set(text value) debug.log(line) raw.extra(json)
 // Every control argument is optional; a second call keeps what the first
 // set. Absent facts are your language's none. Names are snake_case here;
 // your language cases them its own way. Angles are degrees from the +x
@@ -116,6 +116,8 @@ class Starter extends cy.Robot {
       gun.aim({ heading, pitch });
       const now = gun.aimNow;
       if (ready && Math.abs(cy.angles.angleDiff(heading, now.heading)) < 3 && Math.abs(pitch - now.pitch) < 3 && gun.canFire(power, 10)) gun.fire({ power });
+      // A line for your trace, which only you see: uncomment to follow the aim.
+      // this.debug.log(`range ${target.range.toFixed(0)} aim off ${cy.angles.angleDiff(heading, now.heading).toFixed(1)}`);
       this.status.set({ text: ready ? 'TRACK' : 'NARROW', value: target.range });
     } else if (lastSeen !== null && tick - lastSeen <= REACQUIRE) {
       // Lost it: look again where it was last seen, widening the beam, before searching.
